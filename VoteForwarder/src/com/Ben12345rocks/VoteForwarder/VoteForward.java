@@ -62,6 +62,7 @@ public class VoteForward {
 	 */
 	public void checkOfflineVotes() {
 		for (String server : plugin.offline.keySet()) {
+			plugin.offline.put(server, new ArrayList<Vote>());
 			ArrayList<Vote> votes = plugin.offline.get(server);
 			if (votes != null) {
 				for (Vote vote : votes) {
@@ -72,7 +73,7 @@ public class VoteForward {
 					}
 				}
 			}
-			plugin.offline.put(server, new ArrayList<Vote>());
+
 		}
 	}
 

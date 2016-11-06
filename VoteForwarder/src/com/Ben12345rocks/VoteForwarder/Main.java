@@ -62,7 +62,7 @@ public class Main extends JavaPlugin {
 			public void run() {
 				VoteForward.getInstance().checkOfflineVotes();
 			}
-		}, 10, 60 * 20 * 10);
+		}, 10, 60 * 20 * 30);
 
 	}
 
