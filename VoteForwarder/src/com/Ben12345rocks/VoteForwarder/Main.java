@@ -28,6 +28,7 @@ public class Main extends JavaPlugin {
 		} catch (IOException e) {
 			plugin.getLogger().info("Can't submit metrics stats");
 		}
+		new BStatsMetrics(this);
 	}
 
 	/*

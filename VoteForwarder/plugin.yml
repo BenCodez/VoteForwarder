@@ -1,5 +1,5 @@
 name: VoteForwarder
-version: 1.0.2
+version: 1.0.3
 main: com.Ben12345rocks.VoteForwarder.Main
 description: Forward votes to other servers!
 author: Ben12345rocks
