@@ -18,6 +18,8 @@ public class Main extends JavaPlugin {
 
 	public HashMap<String, ArrayList<Vote>> offline;
 
+	private Updater updater;
+
 	/**
 	 * Metrics.
 	 */
@@ -70,7 +72,40 @@ public class Main extends JavaPlugin {
 				VoteForward.getInstance().checkOfflineVotes();
 			}
 		}, 10, 60 * 20 * 30);
+		Bukkit.getScheduler().runTaskAsynchronously(plugin, new Runnable() {
+			
+			@Override
+			public void run() {
+				checkUpdate();
+			}
+		});
 
+	}
+	
+	/**
+	 * Check update.
+	 */
+	public void checkUpdate() {
+		plugin.updater = new Updater(plugin, 30613, false);
+		final Updater.UpdateResult result = plugin.updater.getResult();
+		switch (result) {
+		case FAIL_SPIGOT: {
+			plugin.getLogger().info("Failed to check for update for " + plugin.getName() + "!");
+			break;
+		}
+		case NO_UPDATE: {
+			plugin.getLogger().info(plugin.getName() + " is up to date! Version: " + plugin.updater.getVersion());
+			break;
+		}
+		case UPDATE_AVAILABLE: {
+			plugin.getLogger().info(plugin.getName() + " has an update available! Your Version: "
+					+ plugin.getDescription().getVersion() + " New Version: " + plugin.updater.getVersion());
+			break;
+		}
+		default: {
+			break;
+		}
+		}
 	}
 
 	/**
