@@ -15,7 +15,7 @@ import com.vexsoftware.votifier.model.Vote;
  */
 public class Main extends JavaPlugin {
 	static Main plugin;
-	
+
 	public HashMap<String, ArrayList<Vote>> offline;
 
 	/**
@@ -28,7 +28,14 @@ public class Main extends JavaPlugin {
 		} catch (IOException e) {
 			plugin.getLogger().info("Can't submit metrics stats");
 		}
-		new BStatsMetrics(this);
+		BStatsMetrics bstats = new BStatsMetrics(this);
+		bstats.addCustomChart(new BStatsMetrics.SimplePie("numberofservers") {
+
+			@Override
+			public String getValue() {
+				return "" + Config.getInstance().getServers().size();
+			}
+		});
 	}
 
 	/*
@@ -50,15 +57,14 @@ public class Main extends JavaPlugin {
 	public void onEnable() {
 		plugin = this;
 		offline = new HashMap<String, ArrayList<Vote>>();
-		metrics();
 		setupFiles();
 		registerCommands();
 		registerEvents();
-		plugin.getLogger().info(
-				"Enabled " + plugin.getName() + " " + plugin.getDescription().getVersion());
-		
+		metrics();
+		plugin.getLogger().info("Enabled " + plugin.getName() + " " + plugin.getDescription().getVersion());
+
 		Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, new Runnable() {
-			
+
 			@Override
 			public void run() {
 				VoteForward.getInstance().checkOfflineVotes();
