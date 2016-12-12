@@ -1,2 +1,2 @@
 # VoteForwarder
-Plugin on ApigotMC - https://www.spigotmc.org/resources/voteforwarder.30613/
+Plugin on SpigotMC - https://www.spigotmc.org/resources/voteforwarder.30613/
