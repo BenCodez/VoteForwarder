@@ -28,7 +28,7 @@ public class Main extends JavaPlugin {
 			Metrics metrics = new Metrics(this);
 			metrics.start();
 		} catch (IOException e) {
-			plugin.getLogger().info("Can't submit metrics stats");
+			// plugin.getLogger().info("Can't submit metrics stats");
 		}
 		BStatsMetrics bstats = new BStatsMetrics(this);
 		bstats.addCustomChart(new BStatsMetrics.SimplePie("numberofservers") {
@@ -71,9 +71,10 @@ public class Main extends JavaPlugin {
 			public void run() {
 				VoteForward.getInstance().checkOfflineVotes();
 			}
-		}, 10, 60 * 20 * 30);
+		}, 10, 20 * 60 * 10);
+
 		Bukkit.getScheduler().runTaskAsynchronously(plugin, new Runnable() {
-			
+
 			@Override
 			public void run() {
 				checkUpdate();
@@ -81,7 +82,7 @@ public class Main extends JavaPlugin {
 		});
 
 	}
-	
+
 	/**
 	 * Check update.
 	 */
@@ -120,9 +121,7 @@ public class Main extends JavaPlugin {
 	 */
 	private void registerEvents() {
 		PluginManager pm = getServer().getPluginManager();
-
 		pm.registerEvents(new VotiferEvent(this), this);
-
 	}
 
 	/**
@@ -130,16 +129,13 @@ public class Main extends JavaPlugin {
 	 */
 	public void reload() {
 		Config.getInstance().reloadData();
-
 	}
 
 	/**
 	 * Setup files.
 	 */
 	public void setupFiles() {
-
 		Config.getInstance().setup(this);
-
 	}
 
 }

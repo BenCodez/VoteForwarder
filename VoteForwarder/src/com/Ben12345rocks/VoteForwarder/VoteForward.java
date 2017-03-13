@@ -147,15 +147,12 @@ public class VoteForward {
 	 *            the vote
 	 */
 	public void sendVote(Vote vote) {
-
 		for (String server : Config.getInstance().getServers()) {
-
 			try {
 				sendBungeeVoteServer(server, vote);
 			} catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
 				e.printStackTrace();
 			}
 		}
-
 	}
 }
