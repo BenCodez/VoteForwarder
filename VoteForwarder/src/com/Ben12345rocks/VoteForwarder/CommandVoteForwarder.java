@@ -78,6 +78,7 @@ public class CommandVoteForwarder implements CommandExecutor {
 				vote.setUsername(player);
 				vote.setServiceName(service);
 				VoteForward.getInstance().sendVote(vote);
+				sender.sendMessage("Sent vote for " + player + " on service " + service);
 				return true;
 			}
 		}

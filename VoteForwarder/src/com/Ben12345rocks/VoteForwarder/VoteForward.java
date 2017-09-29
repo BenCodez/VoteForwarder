@@ -12,9 +12,9 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.ArrayList;
 
+import javax.crypto.Cipher;
 import javax.xml.bind.DatatypeConverter;
 
-import com.vexsoftware.votifier.crypto.RSA;
 import com.vexsoftware.votifier.model.Vote;
 
 // TODO: Auto-generated Javadoc
@@ -91,16 +91,13 @@ public class VoteForward {
 	 */
 	public void sendBungeeVoteServer(String server, Vote vote)
 			throws NoSuchAlgorithmException, InvalidKeySpecException {
-		byte[] encodedPublicKey = DatatypeConverter.parseBase64Binary(Config
-				.getInstance().getServerKey(server));
+		byte[] encodedPublicKey = DatatypeConverter.parseBase64Binary(Config.getInstance().getServerKey(server));
 		KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-		X509EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(
-				encodedPublicKey);
+		X509EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(encodedPublicKey);
 		PublicKey publicKey = keyFactory.generatePublic(publicKeySpec);
 		String serverIP = Config.getInstance().getServerIP(server);
 		int serverPort = Config.getInstance().getServerPort(server);
-		String serviceSite = Config.getInstance()
-				.getServerServiceSite(serverIP);
+		String serviceSite = Config.getInstance().getServerServiceSite(serverIP);
 		if (serverIP.length() != 0) {
 			try {
 				if (serviceSite != null) {
@@ -108,25 +105,20 @@ public class VoteForward {
 						vote.setServiceName(serviceSite);
 					}
 				}
-				String VoteString = "VOTE\n" + vote.getServiceName() + "\n"
-						+ vote.getUsername() + "\n" + vote.getAddress() + "\n"
-						+ vote.getTimeStamp() + "\n";
+				String VoteString = "VOTE\n" + vote.getServiceName() + "\n" + vote.getUsername() + "\n"
+						+ vote.getAddress() + "\n" + vote.getTimeStamp() + "\n";
 
-				SocketAddress sockAddr = new InetSocketAddress(serverIP,
-						serverPort);
+				SocketAddress sockAddr = new InetSocketAddress(serverIP, serverPort);
 				Socket socket = new Socket();
 				socket.connect(sockAddr, 1000);
 				OutputStream socketOutputStream = socket.getOutputStream();
-				socketOutputStream.write(RSA.encrypt(VoteString.getBytes(),
-						publicKey));
+				socketOutputStream.write(encrypt(VoteString.getBytes(), publicKey));
 				socketOutputStream.close();
 				socket.close();
 
 			} catch (Exception e) {
-				plugin.getLogger().info(
-						"Failed to send vote to " + server + "(" + serverIP
-								+ ":" + serverPort + "): " + vote.toString()
-								+ ", ignore this if server is offline");
+				plugin.getLogger().info("Failed to send vote to " + server + "(" + serverIP + ":" + serverPort + "): "
+						+ vote.toString() + ", ignore this if server is offline");
 
 				ArrayList<Vote> votes = plugin.offline.get(server);
 				if (votes == null) {
@@ -154,5 +146,11 @@ public class VoteForward {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	private byte[] encrypt(byte[] data, PublicKey key) throws Exception {
+		Cipher cipher = Cipher.getInstance("RSA");
+		cipher.init(Cipher.ENCRYPT_MODE, key);
+		return cipher.doFinal(data);
 	}
 }
